@@ -35,6 +35,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         createPlayers()
     }
     
+    override func update(_ currentTime: TimeInterval) {
+        guard banana != nil else { return }
+        
+        if abs(banana.position.y) > 1000 {
+            banana.removeFromParent()
+            banana = nil
+            changePlayer()
+        }
+    }
+    
     func createBuildings() {
         var currentX: CGFloat = -15
         
@@ -168,20 +178,37 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             addChild(explosion)
         }
         
+        /// Challenge 1:
+        if player == player1 {
+            viewController.playerTwoScore += 1
+        } else if player == player2 {
+            viewController.playerOneScore += 1
+        }
+        
         player.removeFromParent()
         banana.removeFromParent()
         
+        /// Challenge 1:
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-            let newGame = GameScene(size: self.size)
-            newGame.viewController =  self.viewController
-            self.viewController.currentGame = newGame
-            
-            self.changePlayer()
-            newGame.currentPlayer = self.currentPlayer
-            
-            let transition = SKTransition.doorway(withDuration: 1.5)
-            self.view?.presentScene(newGame, transition: transition)
+            if self.viewController.playerOneScore < 3 && self.viewController.playerTwoScore < 3 {
+                self.loadNextRound()
+            } else {
+                self.gameOver()
+            }
         }
+    }
+    
+    /// Challenge 1:
+    func loadNextRound() {
+        let newGame = GameScene(size: self.size)
+        newGame.viewController =  self.viewController
+        self.viewController.currentGame = newGame
+        
+        self.changePlayer()
+        newGame.currentPlayer = self.currentPlayer
+        
+        let transition = SKTransition.doorway(withDuration: 1.5)
+        self.view?.presentScene(newGame, transition: transition)
     }
     
     func changePlayer() {
@@ -209,13 +236,21 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         changePlayer()
     }
     
-    override func update(_ currentTime: TimeInterval) {
-        guard banana != nil else { return }
+    /// Challenge 1:
+    func gameOver() {
+        var winner: String
         
-        if abs(banana.position.y) > 1000 {
-            banana.removeFromParent()
-            banana = nil
-            changePlayer()
+        if viewController.playerOneScore > viewController.playerTwoScore {
+            winner = "Player 1"
+        } else {
+            winner = "Player 2"
         }
+        
+        let gameOverLabel = SKLabelNode(fontNamed: "AcademyEngravedLetPlain")
+        gameOverLabel.text = "\(winner) won!"
+        gameOverLabel.fontColor = .systemYellow
+        gameOverLabel.position = CGPoint(x: 512, y: 660)
+        viewController.playerNumber.isHidden = true
+        addChild(gameOverLabel)
     }
 }
