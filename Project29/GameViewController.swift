@@ -24,25 +24,29 @@ class GameViewController: UIViewController {
     /// Challenge 3:
     @IBOutlet var windStrengthLabel: UILabel!
     @IBOutlet var windDirectionPointer: UIImageView!
+    @IBOutlet var windEmoji: UILabel!
     /// Challenge 3:
     var windStrength = 0.0 {
         didSet {
-            windStrengthLabel.text = "\(windStrength) m/s"
             switch windStrength {
-            case -10 ... -7.5, 10 ... 7.5 :
+            case -10.0 ... -7.6, 7.6 ... 10.0:
+                windStrengthLabel.text = "\(abs(windStrength)) m/s'"
                 windStrengthLabel.textColor = .systemRed
-            case -7.5 ... -5, 7.5 ... 5:
+            case -7.5 ... -5.1, 5.1 ... 7.5:
+                windStrengthLabel.text = "\(abs(windStrength)) m/s'"
                 windStrengthLabel.textColor = .systemOrange
-            case -5 ... -2.5, 5 ... 2.5:
+            case -5.0 ... -2.6, 2.6 ... 5.0:
+                windStrengthLabel.text = "\(abs(windStrength)) m/s'"
                 windStrengthLabel.textColor = .systemYellow
-            case -2.5 ... 0, 2.5 ... 0:
+            case -2.5 ... 0.0, 0.1 ... 2.5:
+                windStrengthLabel.text = "\(abs(windStrength)) m/s'"
                 windStrengthLabel.textColor = .systemGreen
             default:
+                windStrengthLabel.text = "0 m/s"
                 windStrengthLabel.textColor = .white
             }
         }
     }
-    
     /// Challenge 1:
     var playerOneScore = 0 {
         didSet {
@@ -75,7 +79,7 @@ class GameViewController: UIViewController {
             }
             
             view.ignoresSiblingOrder = true
-            
+        
             view.showsFPS = true
             view.showsNodeCount = true
         }
@@ -127,5 +131,33 @@ class GameViewController: UIViewController {
         velocityLabel.isHidden = false
         
         launchButton.isHidden = false
+    }
+    
+    /// Challenge 3:
+    func drawWindDirectionPointer() {
+        let renderer = UIGraphicsImageRenderer(size: CGSize(width: 30, height: 30))
+        let img = renderer.image { ctx in
+            switch windStrength {
+            case -10.0 ... 0.1:
+                ctx.cgContext.move(to: CGPoint(x: 30, y: 15))
+                ctx.cgContext.addLine(to: CGPoint(x: 0, y: 15))
+                ctx.cgContext.addLine(to: CGPoint(x: 5, y: 20))
+                ctx.cgContext.move(to: CGPoint(x: 0, y: 15))
+                ctx.cgContext.addLine(to: CGPoint(x: 5, y: 10))
+            case 0.0:
+                return
+            case 0.1 ... 10.0:
+                ctx.cgContext.move(to: CGPoint(x: 0, y: 15))
+                ctx.cgContext.addLine(to: CGPoint(x: 30, y: 15))
+                ctx.cgContext.addLine(to: CGPoint(x: 25, y: 20))
+                ctx.cgContext.move(to: CGPoint(x: 30, y: 15))
+                ctx.cgContext.addLine(to: CGPoint(x: 25, y: 10))
+            default:
+                return
+            }
+            ctx.cgContext.setStrokeColor(UIColor.white.cgColor)
+            ctx.cgContext.strokePath()
+        }
+        windDirectionPointer.image = img
     }
 }

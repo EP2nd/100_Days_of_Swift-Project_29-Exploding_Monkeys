@@ -12,8 +12,6 @@ enum CollisionTypes: UInt32 {
     case banana = 1
     case building = 2
     case player = 4
-    /// Challenge 3:
-    case pointer = 8
 }
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
@@ -32,7 +30,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         backgroundColor = UIColor(hue: 0.669, saturation: 0.99, brightness: 0.67, alpha: 1)
         
         physicsWorld.contactDelegate = self
-        
+        /// Challenge 3:
+        DispatchQueue.main.async {
+            let windStrength = Double.random(in: -10.0...10.0)
+            self.viewController.windStrength = windStrength
+            self.physicsWorld.gravity = CGVector(dx: windStrength, dy: -9.8)
+            self.viewController.windStrength = Double(round(10 * windStrength) / 10)
+            self.viewController.windStrengthLabel.text = "\(abs(self.viewController.windStrength)) m/s"
+            self.viewController.drawWindDirectionPointer()
+        }
         createBuildings()
         createPlayers()
     }
@@ -179,7 +185,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             explosion.position = player.position
             addChild(explosion)
         }
-        
         /// Challenge 1:
         if player == player1 {
             viewController.playerTwoScore += 1
@@ -190,19 +195,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         player.removeFromParent()
         banana.removeFromParent()
         
-        /// Challenge 1:
-        let windDirectionNode = WindDirectionNode(color: UIColor.systemYellow, size: size)
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            /// Challenge 1:
             if self.viewController.playerOneScore < 3 && self.viewController.playerTwoScore < 3 {
                 self.loadNextRound()
-                /// Challenge 3:
-                windDirectionNode.setup()
             } else {
                 self.gameOver()
             }
         }
     }
-    
     /// Challenge 1:
     func loadNextRound() {
         let newGame = GameScene(size: self.size)
@@ -214,6 +215,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         let transition = SKTransition.doorway(withDuration: 1.5)
         self.view?.presentScene(newGame, transition: transition)
+        
+        /// Challenge 3:
+        let windStrength = Double.random(in: -10.0...10.0)
+        self.viewController.windStrength = windStrength
+        self.physicsWorld.gravity = CGVector(dx: windStrength, dy: -9.8)
+        self.viewController.windStrength = Double(round(10 * windStrength) / 10)
+        self.viewController.windStrengthLabel.text = "\(abs(self.viewController.windStrength)) m/s"
+        self.viewController.drawWindDirectionPointer()
     }
     
     func changePlayer() {
@@ -254,8 +263,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let gameOverLabel = SKLabelNode(fontNamed: "AcademyEngravedLetPlain")
         gameOverLabel.text = "\(winner) won!"
         gameOverLabel.fontColor = .systemYellow
-        gameOverLabel.position = CGPoint(x: 512, y: 660)
+        gameOverLabel.position = CGPoint(x: 512, y: 722)
         viewController.playerNumber.isHidden = true
+        viewController.windDirectionPointer.isHidden = true
+        viewController.windEmoji.isHidden = true
+        viewController.windStrengthLabel.isHidden = true
         addChild(gameOverLabel)
     }
 }
