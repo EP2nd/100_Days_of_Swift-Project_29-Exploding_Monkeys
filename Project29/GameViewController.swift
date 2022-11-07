@@ -21,6 +21,27 @@ class GameViewController: UIViewController {
     @IBOutlet var playerNumber: UILabel!
     /// Challenge 1:
     @IBOutlet var scoreLabel: UILabel!
+    /// Challenge 3:
+    @IBOutlet var windStrengthLabel: UILabel!
+    @IBOutlet var windDirectionPointer: UIImageView!
+    /// Challenge 3:
+    var windStrength = 0.0 {
+        didSet {
+            windStrengthLabel.text = "\(windStrength) m/s"
+            switch windStrength {
+            case -10 ... -7.5, 10 ... 7.5 :
+                windStrengthLabel.textColor = .systemRed
+            case -7.5 ... -5, 7.5 ... 5:
+                windStrengthLabel.textColor = .systemOrange
+            case -5 ... -2.5, 5 ... 2.5:
+                windStrengthLabel.textColor = .systemYellow
+            case -2.5 ... 0, 2.5 ... 0:
+                windStrengthLabel.textColor = .systemGreen
+            default:
+                windStrengthLabel.textColor = .white
+            }
+        }
+    }
     
     /// Challenge 1:
     var playerOneScore = 0 {

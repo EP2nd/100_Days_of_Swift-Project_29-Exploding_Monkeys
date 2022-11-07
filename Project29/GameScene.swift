@@ -12,6 +12,8 @@ enum CollisionTypes: UInt32 {
     case banana = 1
     case building = 2
     case player = 4
+    /// Challenge 3:
+    case pointer = 8
 }
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
@@ -189,9 +191,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         banana.removeFromParent()
         
         /// Challenge 1:
+        let windDirectionNode = WindDirectionNode(color: UIColor.systemYellow, size: size)
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
             if self.viewController.playerOneScore < 3 && self.viewController.playerTwoScore < 3 {
                 self.loadNextRound()
+                /// Challenge 3:
+                windDirectionNode.setup()
             } else {
                 self.gameOver()
             }

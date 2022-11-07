@@ -15,6 +15,7 @@
 		B808DE1029149A1E00B7E96B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B808DE0F29149A1E00B7E96B /* Assets.xcassets */; };
 		B808DE1329149A1E00B7E96B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B808DE1129149A1E00B7E96B /* LaunchScreen.storyboard */; };
 		B808DE1A29149F5D00B7E96B /* BuildingNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = B808DE1929149F5D00B7E96B /* BuildingNode.swift */; };
+		B809124D29174D2D00713A41 /* WindDirectionNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = B809124C29174D2D00713A41 /* WindDirectionNode.swift */; };
 		B8EB6FCB2915A9910040DD28 /* hitBuilding.sks in Resources */ = {isa = PBXBuildFile; fileRef = B8EB6FC92915A9900040DD28 /* hitBuilding.sks */; };
 		B8EB6FCC2915A9910040DD28 /* hitPlayer.sks in Resources */ = {isa = PBXBuildFile; fileRef = B8EB6FCA2915A9900040DD28 /* hitPlayer.sks */; };
 /* End PBXBuildFile section */
@@ -29,6 +30,7 @@
 		B808DE0F29149A1E00B7E96B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B808DE1229149A1E00B7E96B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		B808DE1929149F5D00B7E96B /* BuildingNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuildingNode.swift; sourceTree = "<group>"; };
+		B809124C29174D2D00713A41 /* WindDirectionNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindDirectionNode.swift; sourceTree = "<group>"; };
 		B8EB6FC92915A9900040DD28 /* hitBuilding.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = hitBuilding.sks; sourceTree = "<group>"; };
 		B8EB6FCA2915A9900040DD28 /* hitPlayer.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = hitPlayer.sks; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -66,6 +68,7 @@
 				B808DE0229149A1C00B7E96B /* AppDelegate.swift */,
 				B808DE0429149A1C00B7E96B /* GameScene.sks */,
 				B808DE0829149A1C00B7E96B /* GameScene.swift */,
+				B809124C29174D2D00713A41 /* WindDirectionNode.swift */,
 				B808DE1929149F5D00B7E96B /* BuildingNode.swift */,
 				B808DE0A29149A1C00B7E96B /* GameViewController.swift */,
 				B808DE0C29149A1C00B7E96B /* Main.storyboard */,
@@ -151,6 +154,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B809124D29174D2D00713A41 /* WindDirectionNode.swift in Sources */,
 				B808DE0929149A1C00B7E96B /* GameScene.swift in Sources */,
 				B808DE1A29149F5D00B7E96B /* BuildingNode.swift in Sources */,
 				B808DE0B29149A1C00B7E96B /* GameViewController.swift in Sources */,
