@@ -5,8 +5,8 @@
 //  Created by Edwin Przeźwiecki Jr. on 04/11/2022.
 //
 
-import SpriteKit
 import GameplayKit
+import SpriteKit
 
 enum CollisionTypes: UInt32 {
     case banana = 1
@@ -27,23 +27,31 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var currentPlayer = 1
     
     override func didMove(to view: SKView) {
+        
         backgroundColor = UIColor(hue: 0.669, saturation: 0.99, brightness: 0.67, alpha: 1)
         
         physicsWorld.contactDelegate = self
         /// Challenge 3:
         DispatchQueue.main.async {
+            
             let windStrength = Double.random(in: -10.0...10.0)
+            
             self.viewController.windStrength = windStrength
+            
             self.physicsWorld.gravity = CGVector(dx: windStrength, dy: -9.8)
+            
             self.viewController.windStrength = Double(round(10 * windStrength) / 10)
             self.viewController.windStrengthLabel.text = "\(abs(self.viewController.windStrength)) m/s"
+            
             self.viewController.drawWindDirectionPointer()
         }
+        
         createBuildings()
         createPlayers()
     }
     
     override func update(_ currentTime: TimeInterval) {
+        
         guard banana != nil else { return }
         
         if abs(banana.position.y) > 1000 {
@@ -54,9 +62,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func createBuildings() {
+        
         var currentX: CGFloat = -15
         
         while currentX < 1024 {
+            
             let size = CGSize(width: Int.random(in: 2...4) * 40, height: Int.random(in: 300...600))
             currentX += size.width + 2
             
@@ -70,6 +80,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func createPlayers() {
+        
         player1 = SKSpriteNode(imageNamed: "player")
         player1.name = "player1"
         player1.physicsBody = SKPhysicsBody(circleOfRadius: player1.size.width / 2)
@@ -79,6 +90,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         player1.physicsBody?.isDynamic = false
         
         let player1Building = buildings[1]
+        
         player1.position = CGPoint(x: player1Building.position.x, y: player1Building.position.y + ((player1Building.size.height + player1.size.height) / 2))
         addChild(player1)
         
@@ -91,18 +103,20 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         player2.physicsBody?.isDynamic = false
         
         let player2Building = buildings[buildings.count - 2]
+        
         player2.position = CGPoint(x: player2Building.position.x, y: player2Building.position.y + ((player2Building.size.height + player2.size.height) / 2))
         addChild(player2)
     }
     
     func launch(angle: Int, velocity: Int) {
-        /// 1. Figure out how hard to throw the banana. We accept a velocity parameter, but we'll be dividing that by 10. We can adjust this based on our play testing.
+        
+        /// 1. Figure out how hard to throw the banana. We accept a velocity parameter, but we'll be dividing that by 10. We can adjust this based on our play testing:
         let speed = Double(velocity) / 10.0
         
-        /// 2. Convert the input angle to radians. Most people don't think in radians, so the input will come in as degrees that we will convert to radians.
+        /// 2. Convert the input angle to radians. Most people don't think in radians, so the input will come in as degrees that we will convert to radians:
         let radians = deg2rad(degrees: angle)
         
-        /// 3. If somehow there's a banana already, we'll remove it then create a new one using circle physics.
+        /// 3. If somehow there's a banana already, we'll remove it then create a new one using circle physics:
         if banana != nil {
             banana.removeFromParent()
             banana = nil
@@ -118,22 +132,24 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         addChild(banana)
         
         if currentPlayer == 1 {
-            /// 4. If player 1 was throwing the banana, we position it up and to the left of the player and give it some spin.
+            
+            /// 4. If player 1 was throwing the banana, we position it up and to the left of the player and give it some spin:
             banana.position = CGPoint(x: player1.position.x - 30, y: player1.position.y + 40)
             banana.physicsBody?.angularVelocity = -20
             
-            /// 5. Animate player 1 throwing their arm up then putting it down again.
+            /// 5. Animate player 1 throwing their arm up then putting it down again:
             let raiseArm = SKAction.setTexture(SKTexture(imageNamed: "player1Throw"))
             let lowerArm = SKAction.setTexture(SKTexture(imageNamed: "player"))
             let pause = SKAction.wait(forDuration: 0.15)
             let seqence = SKAction.sequence([raiseArm, pause, lowerArm])
             player1.run(seqence)
             
-            /// 6. Make the banana move in the correct direction.
+            /// 6. Make the banana move in the correct direction:
             let impulse = CGVector(dx: cos(radians) * speed, dy: sin(radians) * speed)
             banana.physicsBody?.applyImpulse(impulse)
         } else {
-            /// 7. If player 2 was throwing the banana, we position it up and to the right, apply the opposite spin, then make it move in the correct direction.
+            
+            /// 7. If player 2 was throwing the banana, we position it up and to the right, apply the opposite spin, then make it move in the correct direction:
             banana.position = CGPoint(x: player2.position.x + 30, y: player2.position.y + 40)
             banana.physicsBody?.angularVelocity = 20
             
@@ -153,6 +169,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func didBegin(_ contact: SKPhysicsContact) {
+        
         let firstBody: SKPhysicsBody
         let secondBody: SKPhysicsBody
         
@@ -181,6 +198,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func destroy(player: SKSpriteNode) {
+        
         if let explosion = SKEmitterNode(fileNamed: "hitPlayer") {
             explosion.position = player.position
             addChild(explosion)
@@ -207,35 +225,45 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     /// Challenge 1:
     func loadNextRound() {
         let newGame = GameScene(size: self.size)
-        newGame.viewController =  self.viewController
+        newGame.viewController = self.viewController
+        
         self.viewController.currentGame = newGame
         
         self.changePlayer()
+        
         newGame.currentPlayer = self.currentPlayer
         
         let transition = SKTransition.doorway(withDuration: 1.5)
-        self.view?.presentScene(newGame, transition: transition)
         
+        self.view?.presentScene(newGame, transition: transition)
         /// Challenge 3:
         let windStrength = Double.random(in: -10.0...10.0)
+        
         self.viewController.windStrength = windStrength
+        
         self.physicsWorld.gravity = CGVector(dx: windStrength, dy: -9.8)
+        
         self.viewController.windStrength = Double(round(10 * windStrength) / 10)
         self.viewController.windStrengthLabel.text = "\(abs(self.viewController.windStrength)) m/s"
+        
         self.viewController.drawWindDirectionPointer()
     }
     
     func changePlayer() {
+        
         if currentPlayer == 1 {
             currentPlayer = 2
         } else {
             currentPlayer = 1
         }
+        
         viewController.activatePlayer(number: currentPlayer)
     }
     
     func bananaHit(building: SKNode, atPoint contactPoint: CGPoint) {
+        
         guard let building = building as? BuildingNode else { return }
+        
         let buildingLocation = convert(contactPoint, to: building)
         building.hit(at: buildingLocation)
         
@@ -243,15 +271,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             explosion.position = contactPoint
             addChild(explosion)
         }
+        
         banana.name = ""
         banana.removeFromParent()
         banana = nil
         
         changePlayer()
     }
-    
     /// Challenge 1:
     func gameOver() {
+        
         var winner: String
         
         if viewController.playerOneScore > viewController.playerTwoScore {
@@ -264,10 +293,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         gameOverLabel.text = "\(winner) won!"
         gameOverLabel.fontColor = .systemYellow
         gameOverLabel.position = CGPoint(x: 512, y: 722)
+        
         viewController.playerNumber.isHidden = true
         viewController.windDirectionPointer.isHidden = true
         viewController.windEmoji.isHidden = true
         viewController.windStrengthLabel.isHidden = true
+        
         addChild(gameOverLabel)
     }
 }

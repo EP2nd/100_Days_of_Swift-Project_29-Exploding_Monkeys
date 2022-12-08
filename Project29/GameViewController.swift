@@ -5,9 +5,9 @@
 //  Created by Edwin Przeźwiecki Jr. on 04/11/2022.
 //
 
-import UIKit
-import SpriteKit
 import GameplayKit
+import SpriteKit
+import UIKit
 
 class GameViewController: UIViewController {
     
@@ -53,6 +53,7 @@ class GameViewController: UIViewController {
             scoreLabel.text = "\(playerOneScore) : \(playerTwoScore)"
         }
     }
+    
     var playerTwoScore = 0 {
         didSet {
             scoreLabel.text = "\(playerOneScore) : \(playerTwoScore)"
@@ -66,12 +67,14 @@ class GameViewController: UIViewController {
         velocityChanged(velocitySlider)
         
         if let view = self.view as! SKView? {
-            // Load the SKScene from 'GameScene.sks'
+            
+            /// Load the SKScene from 'GameScene.sks':
             if let scene = SKScene(fileNamed: "GameScene") {
-                // Set the scale mode to scale to fit the window
+                
+                /// Set the scale mode to scale to fit the window:
                 scene.scaleMode = .aspectFill
                 
-                // Present the scene
+                /// Present the scene:
                 view.presentScene(scene)
                 
                 currentGame = scene as? GameScene
@@ -79,13 +82,13 @@ class GameViewController: UIViewController {
             }
             
             view.ignoresSiblingOrder = true
-        
             view.showsFPS = true
             view.showsNodeCount = true
         }
     }
     
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        
         if UIDevice.current.userInterfaceIdiom == .phone {
             return .allButUpsideDown
         } else {
@@ -118,6 +121,7 @@ class GameViewController: UIViewController {
     }
     
     func activatePlayer(number: Int) {
+        
         if number == 1 {
             playerNumber.text = "<<< PLAYER ONE"
         } else {
@@ -132,10 +136,11 @@ class GameViewController: UIViewController {
         
         launchButton.isHidden = false
     }
-    
     /// Challenge 3:
     func drawWindDirectionPointer() {
+        
         let renderer = UIGraphicsImageRenderer(size: CGSize(width: 30, height: 30))
+        
         let img = renderer.image { ctx in
             switch windStrength {
             case -10.0 ... 0.1:
